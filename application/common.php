@@ -2,11 +2,11 @@
 
 use think\Request;
 use think\Db;
-use GuzzleHttp\Client;
-use \Firebase\JWT\JWT;
 
 $is_ssl = is_ssl() ? 'https://' : 'http://';
-defined('Domain') || define('Domain',$is_ssl.$_SERVER['HTTP_HOST']);
+if(!IS_CLI) {
+    defined('Domain') || define('Domain',$is_ssl.$_SERVER['HTTP_HOST']);
+}
 
 function success($data=[], $code='200', $msg='') {
     json([
@@ -166,4 +166,28 @@ function getDir($dir, $mode = 0777)
     } else {
         return @mkdir($dir, $mode);
     }
+}
+
+/**
+ * 文件夹创建并且给权限
+ * @param string $path 文件夹路径
+ * @param int $mode 权限,默认 0777
+ * @return bool
+ * @author lidong<947714443@qq.com>
+ */
+function mkdir_chmod($path, $mode = 0777){
+    if(is_dir($path)) {
+        return true;
+    }
+
+    $result = mkdir($path, $mode, true);
+    if($result) {
+        $path_arr = explode('/',$path);
+        $path_str = '';
+        foreach($path_arr as $val){
+            $path_str .= $val.'/';
+            $result = chmod($path_str, $mode);
+        }
+    }
+    return $result;
 }
