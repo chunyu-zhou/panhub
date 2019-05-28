@@ -8,16 +8,16 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-
+$static_cdn = \think\Env::get('static_cdn');
 return [
     // +----------------------------------------------------------------------
     // | 应用设置
     // +----------------------------------------------------------------------
 
     // 应用调试模式
-    'app_debug'              => false,
+    'app_debug'              => isset($_GET[\think\Env::get('preview_debug')]) ? true : \think\Env::get('show_app_debug'),
     // 应用Trace
-    'app_trace'              => false,
+    'app_trace'              => isset($_GET[\think\Env::get('preview_debug')]) ? true : \think\Env::get('show_app_trace'),
     // 应用模式状态
     'app_status'             => '',
     // 是否支持多模块
@@ -29,7 +29,7 @@ return [
     // 扩展函数文件
     'extra_file_list'        => [THINK_PATH . 'helper' . EXT],
     // 默认输出类型
-    'default_return_type'    => 'html',
+    'default_return_type'    => 'json',
     // 默认AJAX 数据返回格式,可选json xml ...
     'default_ajax_return'    => 'json',
     // 默认JSONP格式返回的处理方法
@@ -81,7 +81,7 @@ return [
     // pathinfo分隔符
     'pathinfo_depr'          => '/',
     // URL伪静态后缀
-    'url_html_suffix'        => 'html',
+    'url_html_suffix'        => '',
     // URL普通方式参数 用于自动生成
     'url_common_param'       => false,
     // URL参数方式 0 按名称成对解析 1 按顺序解析
@@ -92,8 +92,6 @@ return [
     'route_complete_match'   => false,
     // 路由配置文件（支持配置多个）
     'route_config_file'      => ['route'],
-    // 是否开启路由解析缓存
-    'route_check_cache'      => false,
     // 是否强制使用路由
     'url_route_must'         => false,
     // 域名部署
@@ -113,7 +111,7 @@ return [
     // 是否开启请求缓存 true自动缓存 支持设置请求缓存规则
     'request_cache'          => false,
     // 请求缓存有效期
-    'request_cache_expire'   => null,
+    'request_cache_expire'   => 36000,
     // 全局请求缓存排除规则
     'request_cache_except'   => [],
 
@@ -143,7 +141,18 @@ return [
     ],
 
     // 视图输出字符串内容替换
-    'view_replace_str'       => [],
+    'view_replace_str'       => [
+        '__PUBLIC__'=>  $static_cdn.'public',
+        '__ROOT__' =>   $static_cdn,
+        '__STATIC__' => $static_cdn.'static',
+        '__TOOL__' =>   $static_cdn.'static/tools',
+        '__CSS__'  =>   $static_cdn.'static/css',
+        '__JS__'   =>   $static_cdn.'static/js',
+        '__IMG__'  =>   $static_cdn.'static/images',
+        '__LIB__'  =>   $static_cdn.'static/plugins',
+        '__FONT__' =>   $static_cdn.'static/fonts',
+        '__ADMIN__' =>  $static_cdn.'static/admin',
+    ],
     // 默认跳转页面对应的模板文件
     'dispatch_success_tmpl'  => THINK_PATH . 'tpl' . DS . 'dispatch_jump.tpl',
     'dispatch_error_tmpl'    => THINK_PATH . 'tpl' . DS . 'dispatch_jump.tpl',
@@ -158,7 +167,7 @@ return [
     // 错误显示信息,非调试模式有效
     'error_message'          => '页面错误！请稍后再试～',
     // 显示错误信息
-    'show_error_msg'         => false,
+    'show_error_msg'         => isset($_GET[\think\Env::get('preview_debug')]) ? true : \think\Env::get('show_error_msg'),
     // 异常处理handle类 留空使用 \think\exception\Handle
     'exception_handle'       => '',
 
