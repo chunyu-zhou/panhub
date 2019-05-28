@@ -6,3 +6,11 @@ runtime/*
 vendor/*
 application/database.php
 .env
+
+# 日志文件
+*.log
+runtime/*
+
+# 存储文件
+storage/chunks/*
+storage/files/*

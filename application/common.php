@@ -5,7 +5,7 @@ use think\Db;
 use GuzzleHttp\Client;
 use \Firebase\JWT\JWT;
 
-$is_ssl = is_ssl()? 'https://' : 'http://';
+$is_ssl = is_ssl() ? 'https://' : 'http://';
 defined('Domain') || define('Domain',$is_ssl.$_SERVER['HTTP_HOST']);
 
 function success($data=[], $code='200', $msg='') {
