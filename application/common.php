@@ -107,8 +107,8 @@ function array_sort($arr,$keys,$orderby='asc'){
 }
 
 function countSize($bit,$array=false){
-    $type = array('Bytes','KB','MB','GB','TB');
-    $box = array('1','1024','1048576','1073741824','TB');
+    $type = array(' Bytes',' KB',' MB',' GB',' TB',' PB');
+    $box = array('1','1024','1048576','1073741824','1099511627776',' PB');
     for($i = 0; $bit >= 1024; $i++) {
         $bit/=1024;
     }
@@ -190,4 +190,32 @@ function mkdir_chmod($path, $mode = 0777){
         }
     }
     return $result;
+}
+
+
+//人性化时间显示
+function formatTime($time)
+{
+    $rtime = date("m-d H:i", $time);
+    $htime = date("H:i", $time);
+    $time = time() - $time;
+    if ($time < 60) {
+        $str = $time.'秒前';
+    } elseif ($time < 60 * 60) {
+        $min = floor($time / 60);
+        $str = $min . '分钟前';
+    } elseif ($time < 60 * 60 * 24) {
+        $h = floor($time / (60 * 60));
+        $str = $h . '小时前 ';
+    } elseif ($time < 60 * 60 * 24 * 3) {
+        $d = floor($time / (60 * 60 * 24));
+        if ($d == 1) {
+            $str = '昨天 ' . $rtime;
+        } else {
+            $str = '前天 ' . $rtime;
+        }
+    } else {
+        $str = $rtime;
+    }
+    return $str;
 }
