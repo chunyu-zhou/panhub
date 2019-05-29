@@ -220,64 +220,7 @@ class FileManage extends Model{
 	 * @return void
 	 */
 	static function folderRename($fname,$new,$uid,$notEcho = false){
-		$newTmp = $new;
-		$nerFolderTmp = explode("/",$new);
-		$new = array_pop($nerFolderTmp);
-		$oldFolderTmp = explode("/",$fname);
-		$old = array_pop($oldFolderTmp);
-		if(!self::fileNameValidate($new)){
-			if($notEcho){
-				return '{ "result": { "success": false, "error": "目录名只支持数字、字母、下划线" } }';
-			}
-			die('{ "result": { "success": false, "error": "目录名只支持数字、字母、下划线" } }');
-		}
-		$folderRecord = Db::name('folders')->where('owner',$uid)->where('position_absolute',$fname)->find();
-		if(empty($folderRecord)){
-			if($notEcho){
-				return '{ "result": { "success": false, "error": "目录不存在" } }';
-			}
-			die('{ "result": { "success": false, "error": "目录不存在" } }');
-		}
-		$newPositionAbsolute = substr($fname, 0, strrpos( $fname, '/'))."/".$new;
-		Db::name('folders')->where('owner',$uid)->where('position_absolute',$fname)->update([
-			'folder_name' => $new,
-			'position_absolute' => $newPositionAbsolute,
-		]);
-		$childFolder = Db::name('folders')->where('owner',$uid)->where('position',"like",$fname."%")->select();
-		foreach ($childFolder as $key => $value) {
-			$tmpPositionAbsolute = "";
-			$tmpPosition = "";
-			$pos = strpos($value["position_absolute"], $fname);   
-			if ($pos === false) {   
-				$tmpPositionAbsolute = $value["position_absolute"];   
-			}   
-			$tmpPositionAbsolute = substr_replace($value["position_absolute"], $newTmp, $pos, strlen($fname));
-			$pos = strpos($value["position"], $fname);   
-			if ($pos === false) {   
-				$tmpPosition = $value["position"];   
-			}   
-			$tmpPosition = substr_replace($value["position"], $newTmp, $pos, strlen($fname));
-			Db::name('folders')->where('id',$value["id"])->update([
-				'position_absolute' => $tmpPositionAbsolute,
-				'position' =>$tmpPosition,
-			]);
-		}
-		$childFiles = Db::name('files')->where('upload_user',$uid)->where('dir',"like",$fname."%")->select();
-		foreach ($childFiles as $key => $value) {
-			$tmpPosition = "";
-			$pos = strpos($value["dir"], $fname);   
-			if ($pos === false) {   
-				$tmpPosition = $value["dir"];   
-			}   
-			$tmpPosition = substr_replace($value["dir"], $newTmp, $pos, strlen($fname));
-			Db::name('files')->where('id',$value["id"])->update([
-				'dir' =>$tmpPosition,
-			]);
-		}
-		if($notEcho){
-				return '{ "result": { "success": true} }';
-			}
-		echo ('{ "result": { "success": true} }');
+
 	}
 
 	/**

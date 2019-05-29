@@ -6,9 +6,8 @@ use app\api\model\DiskManage;
 
 class Disk extends Common
 {
-    public function memory() {
-        $driver = input('?get.driver') == false ? 'local' : input('get.driver');
-        $data = DiskManage::getMemory($driver);
-        success($data);
+
+    public function rename() {
+
     }
 }
